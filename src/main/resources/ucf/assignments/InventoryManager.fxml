@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="507.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.InventoryManagerController">
+   <children>
+      <TableView fx:id="InventoryManagerTableView" layoutX="222.0" layoutY="71.0" prefHeight="275.0" prefWidth="612.0">
+        <columns>
+          <TableColumn fx:id="ValueTableColumn" prefWidth="75.0" text="Value" />
+          <TableColumn fx:id="SerialNumberTableColumn" prefWidth="136.0" text="Serial Number" />
+            <TableColumn fx:id="NameTableColumn" minWidth="6.0" prefWidth="400.0" text="Name" />
+        </columns>
+      </TableView>
+      <Button fx:id="AddItemButton" layoutX="222.0" layoutY="356.0" mnemonicParsing="false" text="Add Item" />
+      <TextField fx:id="AddItemNewValueTextField" layoutX="303.0" layoutY="356.0" />
+      <TextField fx:id="AddItemNewSerialNumberTextField" layoutX="463.0" layoutY="356.0" />
+      <TextField fx:id="AddItemNewNameTextField" layoutX="628.0" layoutY="356.0" />
+      <Text layoutX="309.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Value" />
+      <Text layoutX="470.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Serial Number" />
+      <Text layoutX="636.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+      <Button fx:id="RemoveItemButton" layoutX="222.0" layoutY="403.0" mnemonicParsing="false" text="Remove currently clicked item" />
+      <Button fx:id="SortButton" layoutX="347.0" layoutY="437.0" mnemonicParsing="false" text="Sort" />
+      <SplitMenuButton layoutX="222.0" layoutY="437.0" mnemonicParsing="false" text="Sort By">
+        <items>
+            <MenuItem mnemonicParsing="false" text="Due Date" />
+          <MenuItem mnemonicParsing="false" text="Serial Number" />
+          <MenuItem mnemonicParsing="false" text="Name" />
+        </items>
+      </SplitMenuButton>
+      <Button fx:id="SearchButton" layoutX="652.0" layoutY="437.0" mnemonicParsing="false" text="Search" />
+      <SplitMenuButton layoutX="521.0" layoutY="437.0" mnemonicParsing="false" text="Search by">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Serial Number" />
+            <MenuItem mnemonicParsing="false" text="Name" />
+         </items>
+      </SplitMenuButton>
+   </children>
+</AnchorPane>
