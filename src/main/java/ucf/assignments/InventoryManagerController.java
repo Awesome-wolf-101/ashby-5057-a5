@@ -93,7 +93,6 @@ public class InventoryManagerController implements Initializable {
         {
             SortListByName(items);
         }
-
         InventoryManagerTableView.getItems().setAll(items);
     }
 
