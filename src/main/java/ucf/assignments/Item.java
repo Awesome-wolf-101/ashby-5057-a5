@@ -1,15 +1,22 @@
 package ucf.assignments;
 
 public class Item {
-    double Value = 0;
+    String Value = "";
     String SerialNumber = "";
     String Name = "";
 
-    public double getValue() {
+    public Item(String Value, String SerialNumber, String Name)
+    {
+        this.Value = Value;
+        this.SerialNumber = SerialNumber;
+        this.Name = Name;
+    }
+
+    public String getValue() {
         return Value;
     }
 
-    public void setValue(double value) {
+    public void setValue(String value) {
         Value = value;
     }
 
