@@ -3,6 +3,7 @@ package ucf.assignments;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -17,6 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class InventoryManagerController implements Initializable {
 
@@ -51,8 +53,12 @@ public class InventoryManagerController implements Initializable {
         SortByComboBox.getItems().add("Name");
         SearchByComboBox.getItems().add("SerialNumber");
         SearchByComboBox.getItems().add("Name");
+        InventoryManagerTableView.setEditable(true);
+
+
 
     }
+
 
 
     @FXML
@@ -93,6 +99,13 @@ public class InventoryManagerController implements Initializable {
         {
             SortListByName(items);
         }
+        InventoryManagerTableView.getItems().setAll(items);
+    }
+
+    @FXML
+    public void RemoveItemButtonClicked(ActionEvent actionEvent) {
+        int thingToDelete = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
+        DeleteAnItem(items, items, thingToDelete);
         InventoryManagerTableView.getItems().setAll(items);
     }
 
@@ -166,4 +179,30 @@ public class InventoryManagerController implements Initializable {
         }
         return false;
     }
+
+    public void DeleteAnItem(ObservableList<Item> list, ObservableList<Item> list2, int currentDeleteIndex)
+    {
+        //if both passed lists are the same
+        if(list.equals(list2))
+        {
+            //remove the item from the list
+            list.remove(currentDeleteIndex);
+        }
+        //if both passed list are not the same
+        /*
+        else
+        {
+            //find the index of the item in the second list using
+            //the auxillary function FindIndexOfItemInAnotherList
+            //and store that index in a new variable
+            int DataDeleteIndex = FindIndexOfItemInAnotherList(list2.get(currentDeleteIndex), list);
+            //remove the item from one list using the passed in index
+            list2.remove(currentDeleteIndex);
+            //remove the item from the other list using the found index
+            list.remove(DataDeleteIndex);
+        }
+*/
+    }
+
+
 }
