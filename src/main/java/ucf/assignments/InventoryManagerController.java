@@ -24,8 +24,9 @@ public class InventoryManagerController implements Initializable {
 
 
 
-    ObservableList<Item> items = FXCollections.observableArrayList();
-
+    //ObservableList<Item> items = FXCollections.observableArrayList();
+    private final ObservableList<Item> items =
+            FXCollections.observableArrayList();
     @FXML
     public TableView InventoryManagerTableView;
     public TableColumn ValueTableColumn;
@@ -40,23 +41,23 @@ public class InventoryManagerController implements Initializable {
     public ComboBox SortByComboBox;
     public ComboBox SearchByComboBox;
 
-
+    //InventoryManagerTableView<Item>;
     @FXML
     public void initialize(URL url, ResourceBundle rb)
     {
         //set each column to a new value using .setCellValueFactory
-        ValueTableColumn.setCellValueFactory(new PropertyValueFactory("Value"));
-        SerialNumberTableColumn.setCellValueFactory(new PropertyValueFactory("SerialNumber"));
-        NameTableColumn.setCellValueFactory(new PropertyValueFactory("Name"));
+        ValueTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Value"));
+        SerialNumberTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("SerialNumber"));
+        NameTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
         SortByComboBox.getItems().add("Value");
         SortByComboBox.getItems().add("SerialNumber");
         SortByComboBox.getItems().add("Name");
         SearchByComboBox.getItems().add("SerialNumber");
         SearchByComboBox.getItems().add("Name");
         InventoryManagerTableView.setEditable(true);
-
-
-
+        ValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        SerialNumberTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        NameTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
 
@@ -107,6 +108,74 @@ public class InventoryManagerController implements Initializable {
         int thingToDelete = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
         DeleteAnItem(items, items, thingToDelete);
         InventoryManagerTableView.getItems().setAll(items);
+    }
+
+
+    @FXML
+    public void ValueTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+        int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
+        String NewValue = cellEditEvent.getNewValue();
+        if(checkValue(NewValue))
+        {
+            items.get(thingToEdit).setValue(cellEditEvent.getNewValue());
+        }
+        else
+        {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+                    "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
+                    "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
+            errorAlert.showAndWait();
+        }
+
+        InventoryManagerTableView.getItems().setAll(items);
+
+    }
+
+    @FXML
+    public void SerialNumberTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+            int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
+            String NewSerialNumber = cellEditEvent.getNewValue();
+            if(checkSerialNumberLength(NewSerialNumber))
+            {
+            items.get(thingToEdit).setSerialNumber(NewSerialNumber);
+
+            }
+            else
+            {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText("Input not valid");
+                errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+                        "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
+                        "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
+                errorAlert.showAndWait();
+            }
+            InventoryManagerTableView.getItems().setAll(items);
+    }
+
+    @FXML
+    public void NameTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+        int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
+        String NewName = cellEditEvent.getNewValue();
+        if(checkNameLength(NewName))
+        {
+            items.get(thingToEdit).setName(NewName);
+        }
+        else
+        {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+                    "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
+                    "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
+            errorAlert.showAndWait();
+        }
+        InventoryManagerTableView.getItems().setAll(items);
+
+        //Item SelectedItem =  EdittedCell.getTableView().getItems();
+        //SelectedItem.setName(EdittedCell.toString());
+        //InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
@@ -165,7 +234,7 @@ public class InventoryManagerController implements Initializable {
     public boolean checkValue(String value)
     {
 
-        return value.matches("^\\$(0|[1-9][0-9]{0,2})(,\\d{3})*(\\.\\d{1,2})?$");
+        return value.matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$");
     }
 
     public boolean doesSerialNumberAlreadyExist(ObservableList<Item> myList, String SerialNumberGiven)
@@ -188,7 +257,11 @@ public class InventoryManagerController implements Initializable {
             //remove the item from the list
             list.remove(currentDeleteIndex);
         }
-        //if both passed list are not the same
+    }
+
+
+
+    //if both passed list are not the same
         /*
         else
         {
@@ -202,7 +275,5 @@ public class InventoryManagerController implements Initializable {
             list.remove(DataDeleteIndex);
         }
 */
-    }
-
 
 }

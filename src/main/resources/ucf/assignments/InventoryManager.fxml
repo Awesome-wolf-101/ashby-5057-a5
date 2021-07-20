@@ -12,9 +12,9 @@
    <children>
       <TableView fx:id="InventoryManagerTableView" editable="true" layoutX="222.0" layoutY="71.0" prefHeight="275.0" prefWidth="612.0">
         <columns>
-          <TableColumn fx:id="ValueTableColumn" prefWidth="75.0" text="Value" />
-          <TableColumn fx:id="SerialNumberTableColumn" prefWidth="136.0" text="Serial Number" />
-            <TableColumn fx:id="NameTableColumn" minWidth="6.0" prefWidth="400.0" text="Name" />
+          <TableColumn fx:id="ValueTableColumn" onEditCommit="#ValueTableColumnEditted" prefWidth="75.0" text="Value" />
+          <TableColumn fx:id="SerialNumberTableColumn" onEditCommit="#SerialNumberTableColumnEditted" prefWidth="136.0" text="Serial Number" />
+            <TableColumn fx:id="NameTableColumn" minWidth="6.0" onEditCommit="#NameTableColumnEditted" prefWidth="400.0" text="Name" />
         </columns>
       </TableView>
       <Button fx:id="AddItemButton" layoutX="222.0" layoutY="356.0" mnemonicParsing="false" onAction="#AddItemButtonClicked" text="Add Item" />

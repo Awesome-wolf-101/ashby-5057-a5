@@ -16,24 +16,24 @@ public class Item {
         return Value;
     }
 
-    public void setValue(String value) {
-        Value = value;
+    public void setValue(String Value) {
+        this.Value = Value;
     }
 
     public String getSerialNumber() {
         return SerialNumber;
     }
 
-    public void setSerialNumber(String serialNumber) {
-        SerialNumber = serialNumber;
+    public void setSerialNumber(String SerialNumber) {
+        this.SerialNumber = SerialNumber;
     }
 
     public String getName() {
         return Name;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
 
