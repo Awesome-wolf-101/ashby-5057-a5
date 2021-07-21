@@ -128,7 +128,6 @@ public class InventoryManagerController implements Initializable {
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
-
         InventoryManagerTableView.getItems().setAll(items);
 
     }
