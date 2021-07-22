@@ -29,5 +29,6 @@
       <Button fx:id="SearchButton" layoutX="484.0" layoutY="437.0" mnemonicParsing="false" onAction="#SearchButtonClicked" prefHeight="25.0" prefWidth="75.0" text="Search by" />
       <ComboBox fx:id="SortByComboBox" layoutX="291.0" layoutY="437.0" prefWidth="150.0" />
       <ComboBox fx:id="SearchByComboBox" layoutX="573.0" layoutY="437.0" prefWidth="150.0" />
+      <TextField fx:id="SearchTextField" layoutX="574.0" layoutY="468.0" />
    </children>
 </AnchorPane>

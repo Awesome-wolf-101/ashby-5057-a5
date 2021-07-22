@@ -21,9 +21,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 public class InventoryManagerController implements Initializable {
-
-
-
     //ObservableList<Item> items = FXCollections.observableArrayList();
     private final ObservableList<Item> items =
             FXCollections.observableArrayList();
@@ -40,6 +37,7 @@ public class InventoryManagerController implements Initializable {
     public Button SearchButton;
     public ComboBox SortByComboBox;
     public ComboBox SearchByComboBox;
+    public TextField SearchTextField;
 
     //InventoryManagerTableView<Item>;
     @FXML
@@ -60,8 +58,6 @@ public class InventoryManagerController implements Initializable {
         NameTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
-
-
     @FXML
     public void AddItemButtonClicked(ActionEvent actionEvent) {
         String NewValue = AddItemNewValueTextField.getText();
@@ -80,14 +76,13 @@ public class InventoryManagerController implements Initializable {
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
-
-
         InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
     public void SortButtonClicked(ActionEvent actionEvent) {
         String value = (String) SortByComboBox.getValue();
+
         if(value.equals("Value"))
         {
             SortListByValue(items);
@@ -109,7 +104,6 @@ public class InventoryManagerController implements Initializable {
         DeleteAnItem(items, items, thingToDelete);
         InventoryManagerTableView.getItems().setAll(items);
     }
-
 
     @FXML
     public void ValueTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
@@ -179,6 +173,20 @@ public class InventoryManagerController implements Initializable {
 
     @FXML
     public void SearchButtonClicked(ActionEvent actionEvent) {
+        String value = (String) SearchByComboBox.getValue();
+        String SearchString = SearchTextField.getText();
+        if(value.equals("SerialNumber"))
+        {
+            ObservableList<Item> SearchedList = SearchbySerialNumber(items, SearchString);
+            InventoryManagerTableView.getItems().setAll(SearchedList);
+        }
+        else if(value.equals("Name"))
+        {
+            ObservableList<Item> SearchedList = SearchbyName(items, SearchString);
+            InventoryManagerTableView.getItems().setAll(SearchedList);
+        }
+        //InventoryManagerTableView.getItems().setAll(items);
+
     }
 
     public void AddAnItem(ObservableList<Item> list, String NewValue, String NewSerialNumber, String NewName)
@@ -258,8 +266,32 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
+    public void DataToHTMLFile(ObservableList<Item> list, String Pathname, String Data)
+    {
 
 
+    }
+
+    public String PutDataToHTMLString(ObservableList<Item> datalist)
+    {
+        //initialize an output string
+        String OutputString = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<body>\n" +
+                "<h2>Basic HTML Table</h2>\n" +
+                "<table style=\"width:100%\">\n" + "<tr>";
+        //make a for loop
+        for(int i = 0; i < datalist.size(); i++)
+        {
+            //for all elements of the datalist make a temporary string to add to the output string
+            String TempString = "<th>" + datalist.get(i).getValue() +  "</th>\n";
+            //add the temporary string to the output string
+            OutputString += TempString;
+        }
+        OutputString += "</tr>\n" + "<tr>\n";
+        //return the output string
+        return OutputString;
+    }
     //if both passed list are not the same
         /*
         else
@@ -274,5 +306,31 @@ public class InventoryManagerController implements Initializable {
             list.remove(DataDeleteIndex);
         }
 */
+
+    public ObservableList<Item> SearchbyName(ObservableList<Item> list, String SearchString)
+    {
+        ObservableList<Item> TempList =  FXCollections.observableArrayList();
+        for(int i = 0; i < list.size(); i++)
+        {
+            if(list.get(i).getName().contains(SearchString))
+            {
+                TempList.add(list.get(i));
+            }
+        }
+        return TempList;
+    }
+
+    public ObservableList<Item> SearchbySerialNumber(ObservableList<Item> list, String SearchString)
+    {
+        ObservableList<Item> TempList =  FXCollections.observableArrayList();
+        for(int i = 0; i < list.size(); i++)
+        {
+            if(list.get(i).getSerialNumber().contains(SearchString))
+            {
+                TempList.add(list.get(i));
+            }
+        }
+        return TempList;
+    }
 
 }
