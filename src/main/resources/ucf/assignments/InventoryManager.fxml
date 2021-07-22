@@ -33,6 +33,8 @@
       <Button fx:id="SaveInventoryButton" layoutX="32.0" layoutY="25.0" mnemonicParsing="false" onAction="#SaveInventoryButtonClicked" text="Save Inventory As: " />
       <ComboBox fx:id="SaveInventoryAsComboBox" layoutX="180.0" layoutY="25.0" prefWidth="150.0" />
       <Text layoutX="378.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathname:" />
-      <TextField fx:id="SaveInventoryAsTextField" layoutX="447.0" layoutY="25.0" />
+      <TextField fx:id="SaveInventoryAsPathNameTextField" layoutX="447.0" layoutY="25.0" />
+      <Text layoutX="601.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File Name" />
+      <TextField fx:id="SaveInventoryAsFileNameTextField" layoutX="661.0" layoutY="25.0" />
    </children>
 </AnchorPane>

@@ -3,7 +3,6 @@ package ucf.assignments;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -14,8 +13,6 @@ import java.lang.String;
 import java.lang.*;
 import java.io.File;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -39,7 +36,8 @@ public class InventoryManagerController implements Initializable {
     public ComboBox SearchByComboBox;
     public TextField SearchTextField;
     public ComboBox SaveInventoryAsComboBox;
-    public TextField SaveInventoryAsTextField;
+    public TextField SaveInventoryAsPathNameTextField;
+    public TextField SaveInventoryAsFileNameTextField;
 
     //InventoryManagerTableView<Item>;
     @FXML
@@ -196,16 +194,17 @@ public class InventoryManagerController implements Initializable {
     @FXML
     public void SaveInventoryButtonClicked(ActionEvent actionEvent) {
         String value = (String) SaveInventoryAsComboBox.getValue();
-        String Pathname = SaveInventoryAsTextField.getText();
+        String Pathname = SaveInventoryAsPathNameTextField.getText();
+        String Filename = SaveInventoryAsFileNameTextField.getText();
         if(value.equals("HTML"))
         {
-            String DataString =  PutDataToHTMLString(items, "ListName");
+            String DataString =  PutDataToHTMLString(items, Filename);
             PutDataToHTMLFile("ListName", DataString, Pathname);
             //System.out.println(DataString);
         }
         else if(value.equals("TSV"))
         {
-            String DataString2 = PutDataToTSVString(items, "ListName");
+            String DataString2 = PutDataToTSVString(items, Filename);
             PutDataToTSVFile("ListName", DataString2, Pathname);
             //System.out.println(DataString2);
         }
@@ -287,12 +286,6 @@ public class InventoryManagerController implements Initializable {
             //remove the item from the list
             list.remove(currentDeleteIndex);
         }
-    }
-
-    public void DataToHTMLFile(ObservableList<Item> list, String Pathname, String Data)
-    {
-
-
     }
 
     public String PutDataToHTMLString(ObservableList<Item> datalist,String ListName)
@@ -420,6 +413,21 @@ public class InventoryManagerController implements Initializable {
             //print out the error if the try block fails
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<Item> LoadAnHTMLList(String ListNameToLoad, FileReader file1R)
+    {
+        //make a new scanner
+        Scanner sc = new Scanner(file1R);
+        //make a temporarylist to store the read data
+        ObservableList<Item> templist = FXCollections.observableArrayList();
+        //while the file still has lines
+        while(sc.hasNextLine())
+        {
+
+        }
+        //return the temporary list
+        return templist;
     }
 
 }
