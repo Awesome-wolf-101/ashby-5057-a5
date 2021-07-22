@@ -38,6 +38,8 @@ public class InventoryManagerController implements Initializable {
     public ComboBox SortByComboBox;
     public ComboBox SearchByComboBox;
     public TextField SearchTextField;
+    public ComboBox SaveInventoryAsComboBox;
+    public TextField SaveInventoryAsTextField;
 
     //InventoryManagerTableView<Item>;
     @FXML
@@ -52,6 +54,8 @@ public class InventoryManagerController implements Initializable {
         SortByComboBox.getItems().add("Name");
         SearchByComboBox.getItems().add("SerialNumber");
         SearchByComboBox.getItems().add("Name");
+        SaveInventoryAsComboBox.getItems().add("HTML");
+        SaveInventoryAsComboBox.getItems().add("TSV");
         InventoryManagerTableView.setEditable(true);
         ValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         SerialNumberTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -191,10 +195,20 @@ public class InventoryManagerController implements Initializable {
 
     @FXML
     public void SaveInventoryButtonClicked(ActionEvent actionEvent) {
-        String DataString =  PutDataToHTMLString(items, "ListName");
-        String DataString2 = PutDataToTSVString(items, "ListName");
-        System.out.println(DataString2);
-
+        String value = (String) SaveInventoryAsComboBox.getValue();
+        String Pathname = SaveInventoryAsTextField.getText();
+        if(value.equals("HTML"))
+        {
+            String DataString =  PutDataToHTMLString(items, "ListName");
+            PutDataToHTMLFile("ListName", DataString, Pathname);
+            //System.out.println(DataString);
+        }
+        else if(value.equals("TSV"))
+        {
+            String DataString2 = PutDataToTSVString(items, "ListName");
+            PutDataToTSVFile("ListName", DataString2, Pathname);
+            //System.out.println(DataString2);
+        }
     }
 
     public void AddAnItem(ObservableList<Item> list, String NewValue, String NewSerialNumber, String NewName)
@@ -246,6 +260,7 @@ public class InventoryManagerController implements Initializable {
         }
         return false;
     }
+
     public boolean checkValue(String value)
     {
 
@@ -293,11 +308,11 @@ public class InventoryManagerController implements Initializable {
                 "</head>" +
                 "<body>\n" +
                 "<h2>" + ListName +"</h2>\n" +
-                "<table style=\"width:100%\">\n"  + "  <tr>\n" +
-                "    <th>Value</th>\n" +
-                "    <th>SerialNumber</th> \n" +
-                "    <th>Name</th>\n" +
-                "  </tr>\n";
+                "<table style=\"width:100%\">\n"  + "<tr>\n" +
+                "<th>Value</th>\n" +
+                "<th>SerialNumber</th> \n" +
+                "<th>Name</th>\n" +
+                "</tr>\n";
 
         //make a for loop
         for(int i = 0; i < datalist.size(); i++)
@@ -315,6 +330,8 @@ public class InventoryManagerController implements Initializable {
                 "</body>\n" +
                 "</html>";
         //return the output string
+        String Pathname3 = System.getProperty("user.dir") + "\\\\" + "SavedLists"+ "\\\\";
+        System.out.println(Pathname3);
         return OutputString;
     }
 
@@ -361,5 +378,48 @@ public class InventoryManagerController implements Initializable {
         return TempList;
     }
 
+    public void PutDataToHTMLFile(String UserFileName, String textToOutput, String Pathname )
+    {
+        //get the pathname to save to by getting the user's working directory
+        //going into the saved lists directory and making/overriting the userfilename.txt
+        String Pathname2 = Pathname + UserFileName + ".html";
+        //create a new file object based on this pathname
+        File file4 = new File(Pathname2);
+        //use a try block and a catch block
+        try {
+            file4.createNewFile();
+            //make a file writer
+            FileWriter myWriter = new FileWriter(Pathname2);
+            //write the output text to the file writer
+            myWriter.write(textToOutput);
+            //close the file writer
+            myWriter.close();
+        } catch (IOException e) {
+            //print out the error if the try block fails
+            e.printStackTrace();
+        }
+    }
+
+    public void PutDataToTSVFile(String UserFileName, String textToOutput, String Pathname )
+    {
+        //get the pathname to save to by getting the user's working directory
+        //going into the saved lists directory and making/overriting the userfilename.txt
+        String Pathname2 = Pathname + UserFileName + ".txt";
+        //create a new file object based on this pathname
+        File file4 = new File(Pathname2);
+        //use a try block and a catch block
+        try {
+            file4.createNewFile();
+            //make a file writer
+            FileWriter myWriter = new FileWriter(Pathname2);
+            //write the output text to the file writer
+            myWriter.write(textToOutput);
+            //close the file writer
+            myWriter.close();
+        } catch (IOException e) {
+            //print out the error if the try block fails
+            e.printStackTrace();
+        }
+    }
 
 }
