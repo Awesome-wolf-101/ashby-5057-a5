@@ -192,7 +192,8 @@ public class InventoryManagerController implements Initializable {
     @FXML
     public void SaveInventoryButtonClicked(ActionEvent actionEvent) {
         String DataString =  PutDataToHTMLString(items, "ListName");
-        System.out.println(DataString);
+        String DataString2 = PutDataToTSVString(items, "ListName");
+        System.out.println(DataString2);
 
     }
 
@@ -316,20 +317,23 @@ public class InventoryManagerController implements Initializable {
         //return the output string
         return OutputString;
     }
-    //if both passed list are not the same
-        /*
-        else
+
+    public String PutDataToTSVString(ObservableList<Item> datalist,String ListName)
+    {
+        String OutputString = "";
+
+        for(int i = 0; i < datalist.size(); i++)
         {
-            //find the index of the item in the second list using
-            //the auxillary function FindIndexOfItemInAnotherList
-            //and store that index in a new variable
-            int DataDeleteIndex = FindIndexOfItemInAnotherList(list2.get(currentDeleteIndex), list);
-            //remove the item from one list using the passed in index
-            list2.remove(currentDeleteIndex);
-            //remove the item from the other list using the found index
-            list.remove(DataDeleteIndex);
+
+            //for all elements of the datalist make a temporary string to add to the output string
+            String TempString = datalist.get(i).getValue() +  "\t" + datalist.get(i).getSerialNumber() +  "\t" + datalist.get(i).getName() +  "\n";
+            //add the temporary string to the output string
+            OutputString += TempString;
         }
-*/
+
+        return OutputString;
+
+    }
 
     public ObservableList<Item> SearchbyName(ObservableList<Item> list, String SearchString)
     {
