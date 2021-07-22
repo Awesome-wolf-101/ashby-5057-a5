@@ -189,6 +189,13 @@ public class InventoryManagerController implements Initializable {
 
     }
 
+    @FXML
+    public void SaveInventoryButtonClicked(ActionEvent actionEvent) {
+        String DataString =  PutDataToHTMLString(items, "ListName");
+        System.out.println(DataString);
+
+    }
+
     public void AddAnItem(ObservableList<Item> list, String NewValue, String NewSerialNumber, String NewName)
     {
         //create a new item using the item constructor
@@ -272,23 +279,40 @@ public class InventoryManagerController implements Initializable {
 
     }
 
-    public String PutDataToHTMLString(ObservableList<Item> datalist)
+    public String PutDataToHTMLString(ObservableList<Item> datalist,String ListName)
     {
         //initialize an output string
         String OutputString = "<!DOCTYPE html>\n" +
-                "<html>\n" +
+                "<html>\n" + "<head>\n" +
+                "<style>\n" +
+                "table, th, td {\n" +
+                "  border: 1px solid black;\n" +
+                "}\n" +
+                "</style>\n" +
+                "</head>" +
                 "<body>\n" +
-                "<h2>Basic HTML Table</h2>\n" +
-                "<table style=\"width:100%\">\n" + "<tr>";
+                "<h2>" + ListName +"</h2>\n" +
+                "<table style=\"width:100%\">\n"  + "  <tr>\n" +
+                "    <th>Value</th>\n" +
+                "    <th>SerialNumber</th> \n" +
+                "    <th>Name</th>\n" +
+                "  </tr>\n";
+
         //make a for loop
         for(int i = 0; i < datalist.size(); i++)
         {
+            OutputString += "<tr>\n";
             //for all elements of the datalist make a temporary string to add to the output string
-            String TempString = "<th>" + datalist.get(i).getValue() +  "</th>\n";
+            String TempString = "<td>" + datalist.get(i).getValue() +  "</td>\n" +"<td>" + datalist.get(i).getSerialNumber() +  "</td>\n" + "<td>" + datalist.get(i).getName() +  "</td>\n";
             //add the temporary string to the output string
+
             OutputString += TempString;
+            OutputString += "</tr>\n";
         }
-        OutputString += "</tr>\n" + "<tr>\n";
+
+        OutputString += "</table>\n" +
+                "</body>\n" +
+                "</html>";
         //return the output string
         return OutputString;
     }
@@ -332,5 +356,6 @@ public class InventoryManagerController implements Initializable {
         }
         return TempList;
     }
+
 
 }
