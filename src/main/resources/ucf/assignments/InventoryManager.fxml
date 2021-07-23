@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="507.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.InventoryManagerController">
    <children>
-      <TableView fx:id="InventoryManagerTableView" editable="true" layoutX="222.0" layoutY="71.0" prefHeight="275.0" prefWidth="612.0">
+      <TableView fx:id="InventoryManagerTableView" editable="true" layoutX="222.0" layoutY="109.0" prefHeight="237.0" prefWidth="612.0">
         <columns>
           <TableColumn fx:id="ValueTableColumn" onEditCommit="#ValueTableColumnEditted" prefWidth="75.0" text="Value" />
           <TableColumn fx:id="SerialNumberTableColumn" onEditCommit="#SerialNumberTableColumnEditted" prefWidth="136.0" text="Serial Number" />
@@ -34,7 +34,13 @@
       <ComboBox fx:id="SaveInventoryAsComboBox" layoutX="180.0" layoutY="25.0" prefWidth="150.0" />
       <Text layoutX="378.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathname:" />
       <TextField fx:id="SaveInventoryAsPathNameTextField" layoutX="447.0" layoutY="25.0" />
-      <Text layoutX="601.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File Name" />
+      <Text layoutX="601.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File name" />
       <TextField fx:id="SaveInventoryAsFileNameTextField" layoutX="661.0" layoutY="25.0" />
+      <Button fx:id="LoadAListButton" layoutX="32.0" layoutY="66.0" mnemonicParsing="false" onAction="#LoadAListButtonClicked" text="Load A List" />
+      <Text layoutX="137.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathname:" />
+      <TextField fx:id="LoadAListPathNameTextField" layoutX="200.0" layoutY="66.0" />
+      <Text layoutX="378.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File name" />
+      <Text layoutX="499.0" layoutY="485.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Bar:" />
+      <TextField fx:id="LoadAListFileNameTextField" layoutX="434.0" layoutY="66.0" />
    </children>
 </AnchorPane>

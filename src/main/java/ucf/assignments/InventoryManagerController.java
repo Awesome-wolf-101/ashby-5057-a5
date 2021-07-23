@@ -19,7 +19,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class InventoryManagerController implements Initializable {
     //ObservableList<Item> items = FXCollections.observableArrayList();
-    private final ObservableList<Item> items =
+    private  ObservableList<Item> items =
             FXCollections.observableArrayList();
     @FXML
     public TableView InventoryManagerTableView;
@@ -38,6 +38,8 @@ public class InventoryManagerController implements Initializable {
     public ComboBox SaveInventoryAsComboBox;
     public TextField SaveInventoryAsPathNameTextField;
     public TextField SaveInventoryAsFileNameTextField;
+    public TextField LoadAListPathNameTextField;
+    public TextField LoadAListFileNameTextField;
 
     //InventoryManagerTableView<Item>;
     @FXML
@@ -199,15 +201,38 @@ public class InventoryManagerController implements Initializable {
         if(value.equals("HTML"))
         {
             String DataString =  PutDataToHTMLString(items, Filename);
-            PutDataToHTMLFile("ListName", DataString, Pathname);
+            PutDataToHTMLFile(Filename, DataString, Pathname);
             //System.out.println(DataString);
         }
         else if(value.equals("TSV"))
         {
             String DataString2 = PutDataToTSVString(items, Filename);
-            PutDataToTSVFile("ListName", DataString2, Pathname);
+            PutDataToTSVFile(Filename, DataString2, Pathname);
             //System.out.println(DataString2);
         }
+    }
+
+    @FXML
+    public void LoadAListButtonClicked(ActionEvent actionEvent) {
+        String Pathname = LoadAListPathNameTextField.getText();
+        String Filename = LoadAListFileNameTextField.getText();
+
+        String[] arrOfStr = Filename.split("\\.");
+        String FileExtension = arrOfStr[arrOfStr.length -1];
+
+        System.out.println(FileExtension);
+        FileReader file1R = MakeFileReader(Filename, Pathname);
+        if(FileExtension.equals("html"))
+        {
+            items = LoadAnHTMLList(file1R);
+        }
+        else
+        {
+            items = LoadAnTxtList(file1R);
+        }
+        InventoryManagerTableView.getItems().setAll(items);
+
+
     }
 
     public void AddAnItem(ObservableList<Item> list, String NewValue, String NewSerialNumber, String NewName)
@@ -253,11 +278,15 @@ public class InventoryManagerController implements Initializable {
 
     public boolean checkSerialNumberLength(String description)
     {
-        if(description.length() == 10)
+        if(description.length() != 10)
         {
-            return true;
+            return false;
         }
-        return false;
+        if(!description.matches("[a-zA-Z0-9]*"))
+        {
+            return false;
+        }
+        return true;
     }
 
     public boolean checkValue(String value)
@@ -312,7 +341,7 @@ public class InventoryManagerController implements Initializable {
         {
             OutputString += "<tr>\n";
             //for all elements of the datalist make a temporary string to add to the output string
-            String TempString = "<td>" + datalist.get(i).getValue() +  "</td>\n" +"<td>" + datalist.get(i).getSerialNumber() +  "</td>\n" + "<td>" + datalist.get(i).getName() +  "</td>\n";
+            String TempString = "<td>" + datalist.get(i).getValue() +  " </td>\n" +"<td>" + datalist.get(i).getSerialNumber() +  " </td>\n" + "<td>" + datalist.get(i).getName() +  " </td>\n";
             //add the temporary string to the output string
 
             OutputString += TempString;
@@ -415,7 +444,7 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
-    public ObservableList<Item> LoadAnHTMLList(String ListNameToLoad, FileReader file1R)
+    public ObservableList<Item> LoadAnHTMLList( FileReader file1R)
     {
         //make a new scanner
         Scanner sc = new Scanner(file1R);
@@ -424,10 +453,71 @@ public class InventoryManagerController implements Initializable {
         //while the file still has lines
         while(sc.hasNextLine())
         {
+            String ItemString = sc.nextLine();
+            if(ItemString.contains("$"))
+            {
+                String[] arrOfStr = ItemString.split(" ");
+                String NewValue = arrOfStr[0].substring(4);
+                System.out.println(NewValue);
+                String ItemString2 = sc.nextLine();
+                String[] arrOfStr2 = ItemString2.split(" ");
+                String NewSerialNumber = arrOfStr2[0].substring(4);
+                System.out.println(NewSerialNumber);
+                String ItemString3 = sc.nextLine();
+                String[] arrOfStr3 = ItemString3.split(" ");
+                String NewName = arrOfStr3[0].substring(4);
+                System.out.println(NewName);
+                Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+                templist.add(tempitem);
+            }
+        }
+        //return the temporary list
+        return templist;
+    }
 
+    public FileReader MakeFileReader(String ListNameToLoad, String Pathname) {
+        String Pathname2 = Pathname + "\\\\" + ListNameToLoad;
+        //make a file object based on this pathname
+        File file5 = new File(Pathname2);
+        //if the file with the given pathname exists
+        if (file5.exists()) {
+            //use a try catch block
+            try {
+                //make a file reader to read from the file
+                FileReader file1R = new FileReader(Pathname2);
+                return file1R;
+                //set the data list to the list returned by the LoadAList function
+            }
+            //if the try block fails
+            catch (IOException e) {
+                //print the exception
+                e.printStackTrace();
+            }
+        }
+       return null;
+    }
+
+    public ObservableList<Item> LoadAnTxtList( FileReader file1R)
+    {
+        //make a new scanner
+        Scanner sc = new Scanner(file1R);
+        //make a temporarylist to store the read data
+        ObservableList<Item> templist = FXCollections.observableArrayList();
+        //while the file still has lines
+        while(sc.hasNextLine())
+        {
+            String ItemString = sc.nextLine();
+            String[] arrOfStr = ItemString.split("\t");
+            String NewValue = arrOfStr[0];
+            String NewSerialNumber = arrOfStr[1];
+            String NewName = arrOfStr[2];
+            Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+            templist.add(tempitem);
         }
         //return the temporary list
         return templist;
     }
 
 }
+
+
