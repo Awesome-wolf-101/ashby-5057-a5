@@ -231,9 +231,13 @@ public class InventoryManagerController implements Initializable {
         {
             items = LoadAnHTMLList(file1R);
         }
-        else
+        else if(FileExtension.equals("txt"))
         {
             items = LoadAnTxtList(file1R);
+        }
+        else if(FileExtension.equals("json"))
+        {
+            items = LoadAJSONList(file1R);
         }
         InventoryManagerTableView.getItems().setAll(items);
 
@@ -514,15 +518,12 @@ public class InventoryManagerController implements Initializable {
             {
                 String[] arrOfStr = ItemString.split(" ");
                 String NewValue = arrOfStr[0].substring(4);
-                System.out.println(NewValue);
                 String ItemString2 = sc.nextLine();
                 String[] arrOfStr2 = ItemString2.split(" ");
                 String NewSerialNumber = arrOfStr2[0].substring(4);
-                System.out.println(NewSerialNumber);
                 String ItemString3 = sc.nextLine();
                 String[] arrOfStr3 = ItemString3.split(" ");
                 String NewName = arrOfStr3[0].substring(4) + " " + GetLastString(arrOfStr3);
-                System.out.println(NewName);
                 Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
                 templist.add(tempitem);
             }
@@ -591,6 +592,37 @@ public class InventoryManagerController implements Initializable {
         }
         //return the output string
         return OutputString;
+    }
+
+    public ObservableList<Item> LoadAJSONList( FileReader file1R)
+    {
+        //make a new scanner
+        Scanner sc = new Scanner(file1R);
+        //make a temporarylist to store the read data
+        ObservableList<Item> templist = FXCollections.observableArrayList();
+        //while the file still has lines
+        while(sc.hasNextLine())
+        {
+            String ItemString = sc.nextLine();
+            if(ItemString.contains("Value"))
+            {
+                String[] arrOfStr = ItemString.split(":");
+                String NewValue = arrOfStr[1].substring(1,6);
+                System.out.println(NewValue);
+                String ItemString2 = sc.nextLine();
+                String[] arrOfStr2 = ItemString2.split(":");
+                String NewSerialNumber = arrOfStr2[1].substring(1,11);
+                System.out.println(NewSerialNumber);
+                String ItemString3 = sc.nextLine();
+                String[] arrOfStr3 = ItemString3.split(":");
+                String NewName = arrOfStr3[1].substring(1, arrOfStr3[1].substring(1).length() -1) ;
+                System.out.println(NewName);
+                Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+                templist.add(tempitem);
+            }
+        }
+        //return the temporary list
+        return templist;
     }
 
 }
