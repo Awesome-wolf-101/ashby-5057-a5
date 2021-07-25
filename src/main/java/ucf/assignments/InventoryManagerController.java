@@ -521,7 +521,7 @@ public class InventoryManagerController implements Initializable {
                 System.out.println(NewSerialNumber);
                 String ItemString3 = sc.nextLine();
                 String[] arrOfStr3 = ItemString3.split(" ");
-                String NewName = arrOfStr3[0].substring(4);
+                String NewName = arrOfStr3[0].substring(4) + " " + GetLastString(arrOfStr3);
                 System.out.println(NewName);
                 Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
                 templist.add(tempitem);
@@ -572,6 +572,25 @@ public class InventoryManagerController implements Initializable {
         }
         //return the temporary list
         return templist;
+    }
+
+    public  String GetLastString(String [] strarr)
+    {
+        //make an output string
+        String OutputString = "";
+        //start at the third index of the string array and loop
+        //through the array using a for loop
+        for(int i = 1; i < strarr.length; i++)
+        {
+            if(!strarr[i].contains("</td>"))
+            {
+                //add each string to the output string while also adding a space
+                OutputString += strarr[i] + " ";
+            }
+
+        }
+        //return the output string
+        return OutputString;
     }
 
 }
