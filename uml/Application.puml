@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class App{
+
++main()
++start()
+}
+
+class Item{
+    - String Value
+    - String SerialNumber
+    - String Name
+
+    +isValue()
+    +setValue()
+    +getSerialNumber()
+    +setSerialNumber()
+    +getName()
+    +setName()
+
+}
+
+class InventoryManagerController{
+    private  ObservableList<Item> items =
+            FXCollections.observableArrayList();
+    @FXML
+    public TableView InventoryManagerTableView;
+    public TableColumn ValueTableColumn;
+    public TableColumn SerialNumberTableColumn;
+    public TableColumn NameTableColumn;
+    public TextField AddItemNewValueTextField;
+    public TextField AddItemNewSerialNumberTextField;
+    public TextField AddItemNewNameTextField;
+    public Button RemoveItemButton;
+    public Button SortButton;
+    public Button SearchButton;
+    public ComboBox SortByComboBox;
+    public ComboBox SearchByComboBox;
+    public TextField SearchTextField;
+    public ComboBox SaveInventoryAsComboBox;
+    public TextField SaveInventoryAsPathNameTextField;
+    public TextField SaveInventoryAsFileNameTextField;
+    public TextField LoadAListPathNameTextField;
+    public TextField LoadAListFileNameTextField;
+}
+
+
+
+App -- InventoryManagerController
+InventoryManagerController -- Item
+@enduml

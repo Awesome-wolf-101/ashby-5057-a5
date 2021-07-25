@@ -75,7 +75,7 @@ public class InventoryManagerController implements Initializable {
         {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars(where a $ is before the value, as in $4.00 and not 4.00)\n" +
                     "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
@@ -121,7 +121,7 @@ public class InventoryManagerController implements Initializable {
         {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars(where a $ is before the value, as in $4.00 and not 4.00)\n" +
                     "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
@@ -143,7 +143,7 @@ public class InventoryManagerController implements Initializable {
             {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setHeaderText("Input not valid");
-                errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+                errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars(where a $ is before the value, as in $4.00 and not 4.00)\n" +
                         "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
                         "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
                 errorAlert.showAndWait();
@@ -163,16 +163,13 @@ public class InventoryManagerController implements Initializable {
         {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars\n" +
+            errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars(where a $ is before the value, as in $4.00 and not 4.00)\n" +
                     "Each inventory item shall have a unique serial number in the format of XXXXXXXXXX where X can be either a letter or digit\n" +
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
         InventoryManagerTableView.getItems().setAll(items);
 
-        //Item SelectedItem =  EdittedCell.getTableView().getItems();
-        //SelectedItem.setName(EdittedCell.toString());
-        //InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
@@ -243,7 +240,7 @@ public class InventoryManagerController implements Initializable {
         list.add(tempitem);
     }
 
-    public static void  SortListByValue(ObservableList<Item> myList)
+    public void  SortListByValue(ObservableList<Item> myList)
     {
         //make a new comparator for the item object, using the item's due date
         Comparator<Item> studentComparator = Comparator.comparing(Item::getValue);
@@ -251,7 +248,7 @@ public class InventoryManagerController implements Initializable {
         myList.sort(studentComparator);
     }
 
-    public static void  SortListByName(ObservableList<Item> myList)
+    public void  SortListByName(ObservableList<Item> myList)
     {
         //make a new comparator for the item object, using the item's due date
         Comparator<Item> studentComparator = Comparator.comparing(Item::getName);
@@ -358,6 +355,23 @@ public class InventoryManagerController implements Initializable {
     }
 
     public String PutDataToTSVString(ObservableList<Item> datalist,String ListName)
+    {
+        String OutputString = "";
+
+        for(int i = 0; i < datalist.size(); i++)
+        {
+
+            //for all elements of the datalist make a temporary string to add to the output string
+            String TempString = datalist.get(i).getValue() +  "\t" + datalist.get(i).getSerialNumber() +  "\t" + datalist.get(i).getName() +  "\n";
+            //add the temporary string to the output string
+            OutputString += TempString;
+        }
+
+        return OutputString;
+
+    }
+
+    public String PutDataToJsonString(ObservableList<Item> datalist,String ListName)
     {
         String OutputString = "";
 
