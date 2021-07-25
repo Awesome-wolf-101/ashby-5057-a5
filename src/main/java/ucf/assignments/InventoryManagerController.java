@@ -56,6 +56,7 @@ public class InventoryManagerController implements Initializable {
         SearchByComboBox.getItems().add("Name");
         SaveInventoryAsComboBox.getItems().add("HTML");
         SaveInventoryAsComboBox.getItems().add("TSV");
+        SaveInventoryAsComboBox.getItems().add("JSON");
         InventoryManagerTableView.setEditable(true);
         ValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         SerialNumberTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -199,12 +200,19 @@ public class InventoryManagerController implements Initializable {
         {
             String DataString =  PutDataToHTMLString(items, Filename);
             PutDataToHTMLFile(Filename, DataString, Pathname);
+            //System.out.println(PutDataToJsonString(items, "hello"));
             //System.out.println(DataString);
         }
         else if(value.equals("TSV"))
         {
             String DataString2 = PutDataToTSVString(items, Filename);
             PutDataToTSVFile(Filename, DataString2, Pathname);
+            //System.out.println(DataString2);
+        }
+        else if(value.equals("JSON"))
+        {
+            String DataString2 = PutDataToJsonString(items, Filename);
+            PutDataToJsonFile(Filename, DataString2, Pathname);
             //System.out.println(DataString2);
         }
     }
@@ -373,18 +381,30 @@ public class InventoryManagerController implements Initializable {
 
     public String PutDataToJsonString(ObservableList<Item> datalist,String ListName)
     {
-        String OutputString = "";
+        String OutputString = "{\n"+ "\"" + ListName + "\": [" +"\n" + "";
 
         for(int i = 0; i < datalist.size(); i++)
         {
-
-            //for all elements of the datalist make a temporary string to add to the output string
-            String TempString = datalist.get(i).getValue() +  "\t" + datalist.get(i).getSerialNumber() +  "\t" + datalist.get(i).getName() +  "\n";
-            //add the temporary string to the output string
-            OutputString += TempString;
+            if(i != datalist.size() - 1)
+            {
+                //for all elements of the datalist make a temporary string to add to the output string
+                String TempString = "{\n\t\"Value\":" + "\"" + datalist.get(i).getValue() + "\",\n"  +
+                        "\t\"SerialNumber\":" + "\"" + datalist.get(i).getSerialNumber() + "\",\n" +
+                        "\t\"Name\":" + "\"" + datalist.get(i).getName() + "\"\n},\n";
+                //add the temporary string to the output string
+                OutputString += TempString;
+            }
+            else
+            {
+                String TempString = "{\n\t\"Value\":" + "\"" + datalist.get(i).getValue() + "\",\n"  +
+                        "\t\"SerialNumber\":" + "\"" + datalist.get(i).getSerialNumber() + "\",\n" +
+                        "\t\"Name\":" + "\"" + datalist.get(i).getName() + "\"\n}\n";
+                //add the temporary string to the output string
+                OutputString += TempString;
+            }
         }
 
-        return OutputString;
+        return OutputString +"\t]" + "\n}";
 
     }
 
@@ -441,6 +461,28 @@ public class InventoryManagerController implements Initializable {
         //get the pathname to save to by getting the user's working directory
         //going into the saved lists directory and making/overriting the userfilename.txt
         String Pathname2 = Pathname + UserFileName + ".txt";
+        //create a new file object based on this pathname
+        File file4 = new File(Pathname2);
+        //use a try block and a catch block
+        try {
+            file4.createNewFile();
+            //make a file writer
+            FileWriter myWriter = new FileWriter(Pathname2);
+            //write the output text to the file writer
+            myWriter.write(textToOutput);
+            //close the file writer
+            myWriter.close();
+        } catch (IOException e) {
+            //print out the error if the try block fails
+            e.printStackTrace();
+        }
+    }
+
+    public void PutDataToJsonFile(String UserFileName, String textToOutput, String Pathname )
+    {
+        //get the pathname to save to by getting the user's working directory
+        //going into the saved lists directory and making/overriting the userfilename.txt
+        String Pathname2 = Pathname + UserFileName + ".json";
         //create a new file object based on this pathname
         File file4 = new File(Pathname2);
         //use a try block and a catch block
