@@ -43,5 +43,6 @@
       <Text layoutX="499.0" layoutY="485.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Bar:" />
       <TextField fx:id="LoadAListFileNameTextField" layoutX="434.0" layoutY="66.0" />
       <Button layoutX="32.0" layoutY="109.0" mnemonicParsing="false" onAction="#ShowAllInventoryItemsClicked" text="Show All inventory Items" />
+      <Button layoutX="32.0" layoutY="150.0" mnemonicParsing="false" onAction="#Make100ItemsClicked" text="Make 100 Items" />
    </children>
 </AnchorPane>

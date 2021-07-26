@@ -297,7 +297,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, file1R != null);
     }
 
-    //test if you can load an TSV/Tst File as a list(part of requirement #14)
+    //test if you can load an TSV/Txt File as a list(part of requirement #14)
     @Test
     void loadAnTxtList() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -329,19 +329,96 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if you can put data to an Json String(part of requirement #13/ bonus requirement)
     @Test
     void putDataToJsonString() {
+        InventoryManagerController controller = new InventoryManagerController();
+        //make an observable list
+        ObservableList<Item> data = FXCollections.observableArrayList();
+        controller.addAnItem(data, "$4.00", "0123456789", "Candy");
+        String Actual = controller.putDataToJsonString(data, "ListName");
+        assertEquals("{\n" +
+                "\"ListName\": [\n" +
+                "{\n" +
+                "\t\"Value\":\"$4.00\",\n" +
+                "\t\"SerialNumber\":\"0123456789\",\n" +
+                "\t\"Name\":\"Candy\"\n" +
+                "}\n" +
+                "\t]\n" +
+                "}",Actual) ;
     }
 
+    //test if you can put data to an Json String(part of requirement #13/ bonus requirement)
     @Test
     void putDataToJsonFile() {
+        InventoryManagerController controller = new InventoryManagerController();
+        //make an observable list
+        ObservableList<Item> data = FXCollections.observableArrayList();
+        controller.addAnItem(data, "$4.00", "0123456789", "Candy");
+        controller.addAnItem(data, "$3.00", "0123456780", "Apple");
+        controller.addAnItem(data, "$67.00", "0123456781", "Orange");
+        String StringToOutPut = controller.putDataToJsonString(data, "ListName");
+        //call the put data to file function
+        controller.putDataToJsonFile("New file", StringToOutPut, "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
+        String Pathname2 = "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\" + "New file" + ".json";
+        //make a file object for this new file name
+        File file5 = new File(Pathname2);
+        //make a boolean variable to see if this file now exists
+        boolean actual = file5.exists();
+        //check to make sure this boolean variable is true
+        assertEquals(true, actual);
     }
 
+    //test if you can get the last string in a string array(part of requirement #13 html loader)
     @Test
     void getLastString() {
+        InventoryManagerController controller = new InventoryManagerController();
+        //make an observable list
+        ObservableList<Item> data = FXCollections.observableArrayList();
+        String testString = "OOP is a cool class!";
+        String[] arrOfStr = testString.split(" ");
+        String actual = controller.getLastString(arrOfStr);
+        assertEquals("is a cool class! ", actual);
     }
 
+    //test if you can load an Json/.jsom File as a list(part of requirement #14/ bonus requirement)
     @Test
     void loadAJSONList() {
+        InventoryManagerController controller = new InventoryManagerController();
+        //make an observable list
+        ObservableList<Item> data = FXCollections.observableArrayList();
+        controller.addAnItem(data, "$4.00", "0123456789", "Candy");
+        controller.addAnItem(data, "$3.00", "0123456780", "Apple");
+        controller.addAnItem(data, "$67.00", "0123456781", "Orange");
+        String StringToOutPut = controller.putDataToJsonString(data, "ListName");
+        //call the put data to file function
+        controller.putDataToJsonFile("New file", StringToOutPut, "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
+        data.clear();
+        //get the pathname of the new file
+        String Pathname2 = "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\" + "New file" + ".json";
+        //make a file reader
+        try
+        {
+            FileReader file1R = new FileReader(Pathname2);
+            //call the load a list function and store the result in data
+            data = controller.loadAJSONList(file1R);
+            //check to see if the item at the second index of data has a description
+            //equal to it's original description
+            assertEquals("Candy", data.get(0).getName());
+        }
+        catch (IOException e) {
+            //print the exception
+            e.printStackTrace();
+        }
+    }
+
+    //test if you can put data to an TSV File(part of requirement #2)
+    @Test
+    void make100Items() {
+        InventoryManagerController controller = new InventoryManagerController();
+        //make an observable list
+        ObservableList<Item> data = FXCollections.observableArrayList();
+        controller.make100Items(data);
+        assertEquals(true, data.size() == 100);
     }
 }

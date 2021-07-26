@@ -13,9 +13,12 @@ This application manages an Inventory.
 Within this document you will find instructions
 on how to use this application.
 
+Make 100 Items
+-----------
+To Make 100 Items click the "Make 100 Items" button.
+
 Add an Item to the list
 -----------
-
 In order to add an item, enter the New item's desired value
 in the "New Item Value" textfield, the New item's desired serial number
 in the "New Item serial number" textfield, and the New item's desired name

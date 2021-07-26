@@ -260,19 +260,31 @@ public class InventoryManagerController implements Initializable {
         FileReader file1R = makeFileReader(Filename, Pathname);
         //based on the file extension choose the correct function
         //and set items equal to the result of that function
-        if(FileExtension.equals("html"))
+        if(file1R != null)
         {
-            items = loadAnHTMLList(file1R);
+            if(FileExtension.equals("html"))
+            {
+                items = loadAnHTMLList(file1R);
+            }
+            else if(FileExtension.equals("txt"))
+            {
+                items = loadAnTxtList(file1R);
+            }
+            else if(FileExtension.equals("json"))
+            {
+                items = loadAJSONList(file1R);
+            }
         }
-        else if(FileExtension.equals("txt"))
+        else
         {
-            items = loadAnTxtList(file1R);
+            //make an alert if a File reader could not be made
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("A file reader could not be created. please check your file name and path name and try again");
+            errorAlert.showAndWait();
         }
-        else if(FileExtension.equals("json"))
-        {
-            items = loadAJSONList(file1R);
-        }
-        //set the teble view to items
+
+        //set the table view to items
         InventoryManagerTableView.getItems().setAll(items);
     }
 
@@ -280,6 +292,12 @@ public class InventoryManagerController implements Initializable {
     public void ShowAllInventoryItemsClicked(ActionEvent actionEvent)
     {
         //show all the items
+        InventoryManagerTableView.getItems().setAll(items);
+    }
+
+    @FXML
+    public void Make100ItemsClicked(ActionEvent actionEvent) {
+        make100Items(items);
         InventoryManagerTableView.getItems().setAll(items);
     }
 
@@ -406,7 +424,6 @@ public class InventoryManagerController implements Initializable {
                 "</html>";
         //return the output string
         String Pathname3 = System.getProperty("user.dir") + "\\\\" + "SavedLists"+ "\\\\";
-        System.out.println(Pathname3);
         return OutputString;
     }
 
@@ -502,10 +519,12 @@ public class InventoryManagerController implements Initializable {
             myWriter.write(textToOutput);
             //close the file writer
             myWriter.close();
+
         } catch (IOException e) {
             //print out the error if the try block fails
             e.printStackTrace();
         }
+
     }
 
     public void putDataToTSVFile(String userFileName, String textToOutput, String pathname )
@@ -527,7 +546,9 @@ public class InventoryManagerController implements Initializable {
         } catch (IOException e) {
             //print out the error if the try block fails
             e.printStackTrace();
+
         }
+
     }
 
     public void putDataToJsonFile(String userFileName, String textToOutput, String pathname )
@@ -550,6 +571,7 @@ public class InventoryManagerController implements Initializable {
             //print out the error if the try block fails
             e.printStackTrace();
         }
+
     }
 
     public ObservableList<Item> loadAnHTMLList(FileReader file1R)
@@ -668,15 +690,12 @@ public class InventoryManagerController implements Initializable {
             {
                 String[] arrOfStr = ItemString.split(":");
                 String newValue = arrOfStr[1].substring(1,6);
-                System.out.println(newValue);
                 String itemString2 = sc.nextLine();
                 String[] arrOfStr2 = itemString2.split(":");
                 String newSerialNumber = arrOfStr2[1].substring(1,11);
-                System.out.println(newSerialNumber);
                 String itemString3 = sc.nextLine();
                 String[] arrOfStr3 = itemString3.split(":");
-                String newName = arrOfStr3[1].substring(1, arrOfStr3[1].substring(1).length() -1) ;
-                System.out.println(newName);
+                String newName = arrOfStr3[1].substring(1, arrOfStr3[1].substring(1).length()) ;
                 Item tempitem = new Item(newValue, newSerialNumber, newName);
                 templist.add(tempitem);
             }
@@ -684,5 +703,26 @@ public class InventoryManagerController implements Initializable {
         //return the temporary list
         return templist;
     }
+
+    public static void make100Items(ObservableList<Item> myList)
+    {
+        int serialNum = 0000000000;
+
+        //create a for loop
+        for(int i = 0; i < 100; i++)
+        {
+            serialNum += i;
+            String serialString = "" + serialNum;
+            while(serialString.length() != 10)
+            {
+                serialString += "0";
+            }
+            String name = "number " + i;
+            String value = "$" + i +".00";
+            Item tempItem = new Item(value, serialString, name);
+            myList.add(tempItem);
+        }
+    }
+
 
 }
