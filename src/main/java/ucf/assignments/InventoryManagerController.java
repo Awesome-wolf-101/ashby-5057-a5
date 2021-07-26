@@ -1,3 +1,7 @@
+/*
+ *  UCF COP3330 Summer 2021 Assignment 5 Solution
+ *  Copyright 2021 Joshua Ashby
+ */
 package ucf.assignments;
 
 import javafx.collections.FXCollections;
@@ -18,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 public class InventoryManagerController implements Initializable {
-    //ObservableList<Item> items = FXCollections.observableArrayList();
     private  ObservableList<Item> items =
             FXCollections.observableArrayList();
     @FXML
@@ -41,7 +44,6 @@ public class InventoryManagerController implements Initializable {
     public TextField LoadAListPathNameTextField;
     public TextField LoadAListFileNameTextField;
 
-    //InventoryManagerTableView<Item>;
     @FXML
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -49,6 +51,7 @@ public class InventoryManagerController implements Initializable {
         ValueTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Value"));
         SerialNumberTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("SerialNumber"));
         NameTableColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
+        //add the appropriate values to the comboboxes
         SortByComboBox.getItems().add("Value");
         SortByComboBox.getItems().add("SerialNumber");
         SortByComboBox.getItems().add("Name");
@@ -57,6 +60,7 @@ public class InventoryManagerController implements Initializable {
         SaveInventoryAsComboBox.getItems().add("HTML");
         SaveInventoryAsComboBox.getItems().add("TSV");
         SaveInventoryAsComboBox.getItems().add("JSON");
+        //make the table editable
         InventoryManagerTableView.setEditable(true);
         ValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         SerialNumberTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -64,16 +68,21 @@ public class InventoryManagerController implements Initializable {
     }
 
     @FXML
-    public void AddItemButtonClicked(ActionEvent actionEvent) {
-        String NewValue = AddItemNewValueTextField.getText();
-        String NewSerialNumber = AddItemNewSerialNumberTextField.getText();
-        String NewName = AddItemNewNameTextField.getText();
-        if(checkNameLength(NewName) && checkSerialNumberLength(NewSerialNumber) && checkValue(NewValue) && !doesSerialNumberAlreadyExist(items ,NewSerialNumber))
+    public void AddItemButtonClicked(ActionEvent actionEvent)
+    {
+        //get the values needed for the new item
+        String newValue = AddItemNewValueTextField.getText();
+        String newSerialNumber = AddItemNewSerialNumberTextField.getText();
+        String newName = AddItemNewNameTextField.getText();
+        //use the auxillary functions to make sure that all of the user's values are valid
+        if(checkNameLength(newName) && checkSerialNumberLength(newSerialNumber) && checkValue(newValue) && !doesSerialNumberAlreadyExist(items ,newSerialNumber))
         {
-            AddAnItem(items, NewValue, NewSerialNumber, NewName);
+            //add an item to the list
+            addAnItem(items, newValue, newSerialNumber, newName);
         }
         else
         {
+            //make an alert if the user's values are not valid
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
             errorAlert.setContentText("Each inventory item shall have a value representing its monetary value in US dollars(where a $ is before the value, as in $4.00 and not 4.00)\n" +
@@ -81,39 +90,51 @@ public class InventoryManagerController implements Initializable {
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
+        //show the list
         InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
-    public void SortButtonClicked(ActionEvent actionEvent) {
-        String value = (String) SortByComboBox.getValue();
-
-        if(value.equals("Value"))
+    public void SortButtonClicked(ActionEvent actionEvent)
+    {
+        //figure out what the user chose to sort by
+        String userValue = (String) SortByComboBox.getValue();
+        //depending on what the user choose call the appropriate function
+        if(userValue.equals("Value"))
         {
-            SortListByValue(items);
+            sortListByValue(items);
         }
-        else if(value.equals("SerialNumber"))
+        else if(userValue.equals("SerialNumber"))
         {
-            SortListBySerialNumber(items);
+            sortListBySerialNumber(items);
         }
-        else if(value.equals("Name"))
+        else if(userValue.equals("Name"))
         {
-            SortListByName(items);
+            sortListByName(items);
         }
+        //show the sorted list
         InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
-    public void RemoveItemButtonClicked(ActionEvent actionEvent) {
+    public void RemoveItemButtonClicked(ActionEvent actionEvent)
+    {
+        //get the index to be deleted
         int thingToDelete = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
-        DeleteAnItem(items, items, thingToDelete);
+        //call the delete function
+        deleteAnItem(items, items, thingToDelete);
+        //show the list
         InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
-    public void ValueTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+    public void ValueTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent)
+    {
+        //get the index that is being edited
         int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
+        //get the value the user inputted
         String NewValue = cellEditEvent.getNewValue();
+        //check to make sure the value is valid and update the item, otherwise show an alert
         if(checkValue(NewValue))
         {
             items.get(thingToEdit).setValue(cellEditEvent.getNewValue());
@@ -127,18 +148,20 @@ public class InventoryManagerController implements Initializable {
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
+        //show the list
         InventoryManagerTableView.getItems().setAll(items);
-
     }
 
     @FXML
-    public void SerialNumberTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+    public void SerialNumberTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent)
+    {
+            //get the index to edit and the user value
             int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
-            String NewSerialNumber = cellEditEvent.getNewValue();
-            if(checkSerialNumberLength(NewSerialNumber))
+            String newSerialNumber = cellEditEvent.getNewValue();
+            //check to make sure that the serial number is valid and update the item, otherwise show an alert
+            if(checkSerialNumberLength(newSerialNumber) && !doesSerialNumberAlreadyExist(items, newSerialNumber))
             {
-            items.get(thingToEdit).setSerialNumber(NewSerialNumber);
-
+                items.get(thingToEdit).setSerialNumber(newSerialNumber);
             }
             else
             {
@@ -149,16 +172,20 @@ public class InventoryManagerController implements Initializable {
                         "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
                 errorAlert.showAndWait();
             }
+            //show the list
             InventoryManagerTableView.getItems().setAll(items);
     }
 
     @FXML
-    public void NameTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent) {
+    public void NameTableColumnEditted(TableColumn.CellEditEvent<Item, String> cellEditEvent)
+    {
+        //get the index to edit and the user value
         int thingToEdit = InventoryManagerTableView.getSelectionModel().getSelectedIndex();
-        String NewName = cellEditEvent.getNewValue();
-        if(checkNameLength(NewName))
+        String newName = cellEditEvent.getNewValue();
+        //check to see if the new name is valid and update the item, otherwise show an alert
+        if(checkNameLength(newName))
         {
-            items.get(thingToEdit).setName(NewName);
+            items.get(thingToEdit).setName(newName);
         }
         else
         {
@@ -169,108 +196,120 @@ public class InventoryManagerController implements Initializable {
                     "Each inventory item shall have a name between 2 and 256 characters in length (inclusive)");
             errorAlert.showAndWait();
         }
+        //show the list
         InventoryManagerTableView.getItems().setAll(items);
-
     }
 
     @FXML
-    public void SearchButtonClicked(ActionEvent actionEvent) {
+    public void SearchButtonClicked(ActionEvent actionEvent)
+    {
+        //get the values from the user
         String value = (String) SearchByComboBox.getValue();
-        String SearchString = SearchTextField.getText();
+        String searchString = SearchTextField.getText();
+        //based on user input call the appropriate search function and display the new list
         if(value.equals("SerialNumber"))
         {
-            ObservableList<Item> SearchedList = SearchbySerialNumber(items, SearchString);
+            ObservableList<Item> SearchedList = searchBySerialNumber(items, searchString);
             InventoryManagerTableView.getItems().setAll(SearchedList);
         }
         else if(value.equals("Name"))
         {
-            ObservableList<Item> SearchedList = SearchbyName(items, SearchString);
+            ObservableList<Item> SearchedList = searchByName(items, searchString);
             InventoryManagerTableView.getItems().setAll(SearchedList);
         }
-        //InventoryManagerTableView.getItems().setAll(items);
+        
 
     }
 
     @FXML
-    public void SaveInventoryButtonClicked(ActionEvent actionEvent) {
+    public void SaveInventoryButtonClicked(ActionEvent actionEvent)
+    {
+        //get the values form the user
         String value = (String) SaveInventoryAsComboBox.getValue();
-        String Pathname = SaveInventoryAsPathNameTextField.getText();
-        String Filename = SaveInventoryAsFileNameTextField.getText();
+        String pathName = SaveInventoryAsPathNameTextField.getText();
+        String fileName = SaveInventoryAsFileNameTextField.getText();
+        //call the appropriate functions based on the users input
         if(value.equals("HTML"))
         {
-            String DataString =  PutDataToHTMLString(items, Filename);
-            PutDataToHTMLFile(Filename, DataString, Pathname);
-            //System.out.println(PutDataToJsonString(items, "hello"));
-            //System.out.println(DataString);
+            String DataString =  putDataToHTMLString(items, fileName);
+            putDataToHTMLFile(fileName, DataString, pathName);
         }
         else if(value.equals("TSV"))
         {
-            String DataString2 = PutDataToTSVString(items, Filename);
-            PutDataToTSVFile(Filename, DataString2, Pathname);
-            //System.out.println(DataString2);
+            String DataString2 = putDataToTSVString(items, fileName);
+            putDataToTSVFile(fileName, DataString2, pathName);
         }
         else if(value.equals("JSON"))
         {
-            String DataString2 = PutDataToJsonString(items, Filename);
-            PutDataToJsonFile(Filename, DataString2, Pathname);
-            //System.out.println(DataString2);
+            String DataString2 = putDataToJsonString(items, fileName);
+            putDataToJsonFile(fileName, DataString2, pathName);
         }
     }
 
     @FXML
-    public void LoadAListButtonClicked(ActionEvent actionEvent) {
+    public void LoadAListButtonClicked(ActionEvent actionEvent)
+    {
+        //get the values form the user
         String Pathname = LoadAListPathNameTextField.getText();
         String Filename = LoadAListFileNameTextField.getText();
-
+        //find the file extension
         String[] arrOfStr = Filename.split("\\.");
         String FileExtension = arrOfStr[arrOfStr.length -1];
-
         System.out.println(FileExtension);
-        FileReader file1R = MakeFileReader(Filename, Pathname);
+        //make a file reader
+        FileReader file1R = makeFileReader(Filename, Pathname);
+        //based on the file extension choose the correct function
+        //and set items equal to the result of that function
         if(FileExtension.equals("html"))
         {
-            items = LoadAnHTMLList(file1R);
+            items = loadAnHTMLList(file1R);
         }
         else if(FileExtension.equals("txt"))
         {
-            items = LoadAnTxtList(file1R);
+            items = loadAnTxtList(file1R);
         }
         else if(FileExtension.equals("json"))
         {
-            items = LoadAJSONList(file1R);
+            items = loadAJSONList(file1R);
         }
+        //set the teble view to items
         InventoryManagerTableView.getItems().setAll(items);
-
-
     }
 
-    public void AddAnItem(ObservableList<Item> list, String NewValue, String NewSerialNumber, String NewName)
+    @FXML
+    public void ShowAllInventoryItemsClicked(ActionEvent actionEvent)
+    {
+        //show all the items
+        InventoryManagerTableView.getItems().setAll(items);
+    }
+
+    public void addAnItem(ObservableList<Item> list, String newValue, String newSerialNumber, String newName)
     {
         //create a new item using the item constructor
-        Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+        Item tempitem = new Item(newValue, newSerialNumber, newName);
         //add that item to the passed list
         list.add(tempitem);
     }
 
-    public void  SortListByValue(ObservableList<Item> myList)
+    public void sortListByValue(ObservableList<Item> myList)
     {
-        //make a new comparator for the item object, using the item's due date
+        //make a new comparator for the item object, using the item's value
         Comparator<Item> studentComparator = Comparator.comparing(Item::getValue);
         //sort the list passed into the function
         myList.sort(studentComparator);
     }
 
-    public void  SortListByName(ObservableList<Item> myList)
+    public void sortListByName(ObservableList<Item> myList)
     {
-        //make a new comparator for the item object, using the item's due date
+        //make a new comparator for the item object, using the item's name
         Comparator<Item> studentComparator = Comparator.comparing(Item::getName);
         //sort the list passed into the function
         myList.sort(studentComparator);
     }
 
-    public static void  SortListBySerialNumber(ObservableList<Item> myList)
+    public static void sortListBySerialNumber(ObservableList<Item> myList)
     {
-        //make a new comparator for the item object, using the item's due date
+        //make a new comparator for the item object, using the item's serial number
         Comparator<Item> studentComparator = Comparator.comparing(Item::getSerialNumber);
         //sort the list passed into the function
         myList.sort(studentComparator);
@@ -278,6 +317,8 @@ public class InventoryManagerController implements Initializable {
 
     public  boolean checkNameLength(String description)
     {
+        //if the description is within 2 and 256 characters return true otherwise
+        //return false
         if(description.length() >= 2 && description.length() <= 256)
         {
             return true;
@@ -287,6 +328,8 @@ public class InventoryManagerController implements Initializable {
 
     public boolean checkSerialNumberLength(String description)
     {
+        //if the passed string is not 10 characters long or does not
+        //contain only letters and numbers return false, otherwise return true
         if(description.length() != 10)
         {
             return false;
@@ -300,15 +343,17 @@ public class InventoryManagerController implements Initializable {
 
     public boolean checkValue(String value)
     {
-
+        //make sure the value matches the regex
         return value.matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$");
     }
 
-    public boolean doesSerialNumberAlreadyExist(ObservableList<Item> myList, String SerialNumberGiven)
+    public boolean doesSerialNumberAlreadyExist(ObservableList<Item> myList, String serialNumberGiven)
     {
+        //if the serial number given already exists in the passed list return true
+        //otherwise return false
         for(int i = 0; i < myList.size(); i++)
         {
-            if(myList.get(i).getSerialNumber().equals(SerialNumberGiven))
+            if(myList.get(i).getSerialNumber().equals(serialNumberGiven))
             {
                 return true;
             }
@@ -316,7 +361,7 @@ public class InventoryManagerController implements Initializable {
         return false;
     }
 
-    public void DeleteAnItem(ObservableList<Item> list, ObservableList<Item> list2, int currentDeleteIndex)
+    public void deleteAnItem(ObservableList<Item> list, ObservableList<Item> list2, int currentDeleteIndex)
     {
         //if both passed lists are the same
         if(list.equals(list2))
@@ -326,7 +371,7 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
-    public String PutDataToHTMLString(ObservableList<Item> datalist,String ListName)
+    public String putDataToHTMLString(ObservableList<Item> datalist, String listName)
     {
         //initialize an output string
         String OutputString = "<!DOCTYPE html>\n" +
@@ -338,7 +383,7 @@ public class InventoryManagerController implements Initializable {
                 "</style>\n" +
                 "</head>" +
                 "<body>\n" +
-                "<h2>" + ListName +"</h2>\n" +
+                "<h2>" + listName +"</h2>\n" +
                 "<table style=\"width:100%\">\n"  + "<tr>\n" +
                 "<th>Value</th>\n" +
                 "<th>SerialNumber</th> \n" +
@@ -352,7 +397,6 @@ public class InventoryManagerController implements Initializable {
             //for all elements of the datalist make a temporary string to add to the output string
             String TempString = "<td>" + datalist.get(i).getValue() +  " </td>\n" +"<td>" + datalist.get(i).getSerialNumber() +  " </td>\n" + "<td>" + datalist.get(i).getName() +  " </td>\n";
             //add the temporary string to the output string
-
             OutputString += TempString;
             OutputString += "</tr>\n";
         }
@@ -366,37 +410,36 @@ public class InventoryManagerController implements Initializable {
         return OutputString;
     }
 
-    public String PutDataToTSVString(ObservableList<Item> datalist,String ListName)
+    public String putDataToTSVString(ObservableList<Item> datalist, String listName)
     {
-        String OutputString = "";
-
+        //initialize an output string
+        String outputString = "";
         for(int i = 0; i < datalist.size(); i++)
         {
-
             //for all elements of the datalist make a temporary string to add to the output string
-            String TempString = datalist.get(i).getValue() +  "\t" + datalist.get(i).getSerialNumber() +  "\t" + datalist.get(i).getName() +  "\n";
+            String tempString = datalist.get(i).getValue() +  "\t" + datalist.get(i).getSerialNumber() +  "\t" + datalist.get(i).getName() +  "\n";
             //add the temporary string to the output string
-            OutputString += TempString;
+            outputString += tempString;
         }
-
-        return OutputString;
-
+        //return the output sting
+        return outputString;
     }
 
-    public String PutDataToJsonString(ObservableList<Item> datalist,String ListName)
+    public String putDataToJsonString(ObservableList<Item> datalist, String listName)
     {
-        String OutputString = "{\n"+ "\"" + ListName + "\": [" +"\n" + "";
-
+        //create the begining of an output string
+        String outputString = "{\n"+ "\"" + listName + "\": [" +"\n" + "";
+        //add every peice of data to the output string
         for(int i = 0; i < datalist.size(); i++)
         {
             if(i != datalist.size() - 1)
             {
                 //for all elements of the datalist make a temporary string to add to the output string
-                String TempString = "{\n\t\"Value\":" + "\"" + datalist.get(i).getValue() + "\",\n"  +
+                String tempString = "{\n\t\"Value\":" + "\"" + datalist.get(i).getValue() + "\",\n"  +
                         "\t\"SerialNumber\":" + "\"" + datalist.get(i).getSerialNumber() + "\",\n" +
                         "\t\"Name\":" + "\"" + datalist.get(i).getName() + "\"\n},\n";
                 //add the temporary string to the output string
-                OutputString += TempString;
+                outputString += tempString;
             }
             else
             {
@@ -404,52 +447,57 @@ public class InventoryManagerController implements Initializable {
                         "\t\"SerialNumber\":" + "\"" + datalist.get(i).getSerialNumber() + "\",\n" +
                         "\t\"Name\":" + "\"" + datalist.get(i).getName() + "\"\n}\n";
                 //add the temporary string to the output string
-                OutputString += TempString;
+                outputString += TempString;
             }
         }
-
-        return OutputString +"\t]" + "\n}";
-
+        //return the output string
+        return outputString +"\t]" + "\n}";
     }
 
-    public ObservableList<Item> SearchbyName(ObservableList<Item> list, String SearchString)
+    public ObservableList<Item> searchByName(ObservableList<Item> list, String searchString)
     {
-        ObservableList<Item> TempList =  FXCollections.observableArrayList();
+        //create a temporary list
+        ObservableList<Item> tempList =  FXCollections.observableArrayList();
+        //if the list contains part of te search string, add it to the temporary list
         for(int i = 0; i < list.size(); i++)
         {
-            if(list.get(i).getName().contains(SearchString))
+            if(list.get(i).getName().contains(searchString))
             {
-                TempList.add(list.get(i));
+                tempList.add(list.get(i));
             }
         }
-        return TempList;
+        //return the temporary list
+        return tempList;
     }
 
-    public ObservableList<Item> SearchbySerialNumber(ObservableList<Item> list, String SearchString)
+    public ObservableList<Item> searchBySerialNumber(ObservableList<Item> list, String searchString)
     {
-        ObservableList<Item> TempList =  FXCollections.observableArrayList();
+        //create a temporary string
+        ObservableList<Item> tempList =  FXCollections.observableArrayList();
+        //if the list contains part of te search string, add it to the temporary list
         for(int i = 0; i < list.size(); i++)
         {
-            if(list.get(i).getSerialNumber().contains(SearchString))
+            if(list.get(i).getSerialNumber().contains(searchString))
             {
-                TempList.add(list.get(i));
+                tempList.add(list.get(i));
             }
         }
-        return TempList;
+        //return the temporary list
+        return tempList;
     }
 
-    public void PutDataToHTMLFile(String UserFileName, String textToOutput, String Pathname )
+    public void putDataToHTMLFile(String userFileName, String textToOutput, String pathname )
     {
         //get the pathname to save to by getting the user's working directory
-        //going into the saved lists directory and making/overriting the userfilename.txt
-        String Pathname2 = Pathname + UserFileName + ".html";
+        //going into the saved lists directory and making/overriting the userfilename.html
+        String pathname2 = pathname + userFileName + ".html";
         //create a new file object based on this pathname
-        File file4 = new File(Pathname2);
+        File file4 = new File(pathname2);
         //use a try block and a catch block
         try {
             file4.createNewFile();
             //make a file writer
-            FileWriter myWriter = new FileWriter(Pathname2);
+            FileWriter myWriter = new FileWriter(pathname2);
             //write the output text to the file writer
             myWriter.write(textToOutput);
             //close the file writer
@@ -460,18 +508,18 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
-    public void PutDataToTSVFile(String UserFileName, String textToOutput, String Pathname )
+    public void putDataToTSVFile(String userFileName, String textToOutput, String pathname )
     {
         //get the pathname to save to by getting the user's working directory
         //going into the saved lists directory and making/overriting the userfilename.txt
-        String Pathname2 = Pathname + UserFileName + ".txt";
+        String pathname2 = pathname + userFileName + ".txt";
         //create a new file object based on this pathname
-        File file4 = new File(Pathname2);
+        File file4 = new File(pathname2);
         //use a try block and a catch block
         try {
             file4.createNewFile();
             //make a file writer
-            FileWriter myWriter = new FileWriter(Pathname2);
+            FileWriter myWriter = new FileWriter(pathname2);
             //write the output text to the file writer
             myWriter.write(textToOutput);
             //close the file writer
@@ -482,18 +530,18 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
-    public void PutDataToJsonFile(String UserFileName, String textToOutput, String Pathname )
+    public void putDataToJsonFile(String userFileName, String textToOutput, String pathname )
     {
         //get the pathname to save to by getting the user's working directory
-        //going into the saved lists directory and making/overriting the userfilename.txt
-        String Pathname2 = Pathname + UserFileName + ".json";
+        //going into the saved lists directory and making/overriting the userfilename.json
+        String pathname2 = pathname + userFileName + ".json";
         //create a new file object based on this pathname
-        File file4 = new File(Pathname2);
+        File file4 = new File(pathname2);
         //use a try block and a catch block
         try {
             file4.createNewFile();
             //make a file writer
-            FileWriter myWriter = new FileWriter(Pathname2);
+            FileWriter myWriter = new FileWriter(pathname2);
             //write the output text to the file writer
             myWriter.write(textToOutput);
             //close the file writer
@@ -504,7 +552,7 @@ public class InventoryManagerController implements Initializable {
         }
     }
 
-    public ObservableList<Item> LoadAnHTMLList( FileReader file1R)
+    public ObservableList<Item> loadAnHTMLList(FileReader file1R)
     {
         //make a new scanner
         Scanner sc = new Scanner(file1R);
@@ -513,18 +561,22 @@ public class InventoryManagerController implements Initializable {
         //while the file still has lines
         while(sc.hasNextLine())
         {
+            //make a string per line
             String ItemString = sc.nextLine();
+            //if the string contains a $, get the next values
+            //and make a new item to add to the temporary list
             if(ItemString.contains("$"))
             {
                 String[] arrOfStr = ItemString.split(" ");
-                String NewValue = arrOfStr[0].substring(4);
-                String ItemString2 = sc.nextLine();
-                String[] arrOfStr2 = ItemString2.split(" ");
-                String NewSerialNumber = arrOfStr2[0].substring(4);
-                String ItemString3 = sc.nextLine();
-                String[] arrOfStr3 = ItemString3.split(" ");
-                String NewName = arrOfStr3[0].substring(4) + " " + GetLastString(arrOfStr3);
-                Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+                String newValue = arrOfStr[0].substring(4);
+                String itemString2 = sc.nextLine();
+                String[] arrOfStr2 = itemString2.split(" ");
+                String newSerialNumber = arrOfStr2[0].substring(4);
+                String itemString3 = sc.nextLine();
+                String[] arrOfStr3 = itemString3.split(" ");
+                //call get last string to extract the part of the string we want
+                String newName = arrOfStr3[0].substring(4) + " " + getLastString(arrOfStr3);
+                Item tempitem = new Item(newValue, newSerialNumber, newName);
                 templist.add(tempitem);
             }
         }
@@ -532,7 +584,8 @@ public class InventoryManagerController implements Initializable {
         return templist;
     }
 
-    public FileReader MakeFileReader(String ListNameToLoad, String Pathname) {
+    public FileReader makeFileReader(String ListNameToLoad, String Pathname)
+    {
         String Pathname2 = Pathname + "\\\\" + ListNameToLoad;
         //make a file object based on this pathname
         File file5 = new File(Pathname2);
@@ -554,7 +607,7 @@ public class InventoryManagerController implements Initializable {
        return null;
     }
 
-    public ObservableList<Item> LoadAnTxtList( FileReader file1R)
+    public ObservableList<Item> loadAnTxtList(FileReader file1R)
     {
         //make a new scanner
         Scanner sc = new Scanner(file1R);
@@ -563,38 +616,42 @@ public class InventoryManagerController implements Initializable {
         //while the file still has lines
         while(sc.hasNextLine())
         {
-            String ItemString = sc.nextLine();
-            String[] arrOfStr = ItemString.split("\t");
-            String NewValue = arrOfStr[0];
-            String NewSerialNumber = arrOfStr[1];
-            String NewName = arrOfStr[2];
-            Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+            //split the string by tab get the values
+            //and turn those values into a new item
+            //then add the new item to the temporary list
+            String itemString = sc.nextLine();
+            String[] arrOfStr = itemString.split("\t");
+            String newValue = arrOfStr[0];
+            String newSerialNumber = arrOfStr[1];
+            String newName = arrOfStr[2];
+            Item tempitem = new Item(newValue, newSerialNumber, newName);
             templist.add(tempitem);
         }
         //return the temporary list
         return templist;
     }
 
-    public  String GetLastString(String [] strarr)
+    public  String getLastString(String [] strarr)
     {
         //make an output string
-        String OutputString = "";
-        //start at the third index of the string array and loop
+        String outputString = "";
+        //start at the first index of the string array and loop
         //through the array using a for loop
         for(int i = 1; i < strarr.length; i++)
         {
+            //if an array does not contain "</td>" . . .
             if(!strarr[i].contains("</td>"))
             {
                 //add each string to the output string while also adding a space
-                OutputString += strarr[i] + " ";
+                outputString += strarr[i] + " ";
             }
 
         }
         //return the output string
-        return OutputString;
+        return outputString;
     }
 
-    public ObservableList<Item> LoadAJSONList( FileReader file1R)
+    public ObservableList<Item> loadAJSONList(FileReader file1R)
     {
         //make a new scanner
         Scanner sc = new Scanner(file1R);
@@ -603,21 +660,24 @@ public class InventoryManagerController implements Initializable {
         //while the file still has lines
         while(sc.hasNextLine())
         {
+            //make a string per line
             String ItemString = sc.nextLine();
+            //if the string contains "Value", get the next values
+            //and make a new item to add to the temporary list
             if(ItemString.contains("Value"))
             {
                 String[] arrOfStr = ItemString.split(":");
-                String NewValue = arrOfStr[1].substring(1,6);
-                System.out.println(NewValue);
-                String ItemString2 = sc.nextLine();
-                String[] arrOfStr2 = ItemString2.split(":");
-                String NewSerialNumber = arrOfStr2[1].substring(1,11);
-                System.out.println(NewSerialNumber);
-                String ItemString3 = sc.nextLine();
-                String[] arrOfStr3 = ItemString3.split(":");
-                String NewName = arrOfStr3[1].substring(1, arrOfStr3[1].substring(1).length() -1) ;
-                System.out.println(NewName);
-                Item tempitem = new Item(NewValue, NewSerialNumber, NewName);
+                String newValue = arrOfStr[1].substring(1,6);
+                System.out.println(newValue);
+                String itemString2 = sc.nextLine();
+                String[] arrOfStr2 = itemString2.split(":");
+                String newSerialNumber = arrOfStr2[1].substring(1,11);
+                System.out.println(newSerialNumber);
+                String itemString3 = sc.nextLine();
+                String[] arrOfStr3 = itemString3.split(":");
+                String newName = arrOfStr3[1].substring(1, arrOfStr3[1].substring(1).length() -1) ;
+                System.out.println(newName);
+                Item tempitem = new Item(newValue, newSerialNumber, newName);
                 templist.add(tempitem);
             }
         }
@@ -626,5 +686,3 @@ public class InventoryManagerController implements Initializable {
     }
 
 }
-
-

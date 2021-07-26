@@ -21,9 +21,9 @@
       <TextField fx:id="AddItemNewValueTextField" layoutX="303.0" layoutY="356.0" />
       <TextField fx:id="AddItemNewSerialNumberTextField" layoutX="463.0" layoutY="356.0" />
       <TextField fx:id="AddItemNewNameTextField" layoutX="628.0" layoutY="356.0" />
-      <Text layoutX="309.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Value" />
-      <Text layoutX="470.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Serial Number" />
-      <Text layoutX="636.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+      <Text layoutX="309.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Item Value" />
+      <Text layoutX="470.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Item Serial Number" />
+      <Text layoutX="636.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Item Name" />
       <Button fx:id="RemoveItemButton" layoutX="222.0" layoutY="403.0" mnemonicParsing="false" onAction="#RemoveItemButtonClicked" text="Remove currently clicked item" />
       <Button fx:id="SortButton" layoutX="228.0" layoutY="437.0" mnemonicParsing="false" onAction="#SortButtonClicked" text="Sort by" />
       <Button fx:id="SearchButton" layoutX="484.0" layoutY="437.0" mnemonicParsing="false" onAction="#SearchButtonClicked" prefHeight="25.0" prefWidth="75.0" text="Search by" />
@@ -42,5 +42,6 @@
       <Text layoutX="378.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File name" />
       <Text layoutX="499.0" layoutY="485.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Bar:" />
       <TextField fx:id="LoadAListFileNameTextField" layoutX="434.0" layoutY="66.0" />
+      <Button layoutX="32.0" layoutY="109.0" mnemonicParsing="false" onAction="#ShowAllInventoryItemsClicked" text="Show All inventory Items" />
    </children>
 </AnchorPane>

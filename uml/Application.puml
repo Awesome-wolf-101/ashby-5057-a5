@@ -22,27 +22,63 @@ class Item{
 }
 
 class InventoryManagerController{
-    private  ObservableList<Item> items =
-            FXCollections.observableArrayList();
-    @FXML
-    public TableView InventoryManagerTableView;
-    public TableColumn ValueTableColumn;
-    public TableColumn SerialNumberTableColumn;
-    public TableColumn NameTableColumn;
-    public TextField AddItemNewValueTextField;
-    public TextField AddItemNewSerialNumberTextField;
-    public TextField AddItemNewNameTextField;
-    public Button RemoveItemButton;
-    public Button SortButton;
-    public Button SearchButton;
-    public ComboBox SortByComboBox;
-    public ComboBox SearchByComboBox;
-    public TextField SearchTextField;
-    public ComboBox SaveInventoryAsComboBox;
-    public TextField SaveInventoryAsPathNameTextField;
-    public TextField SaveInventoryAsFileNameTextField;
-    public TextField LoadAListPathNameTextField;
-    public TextField LoadAListFileNameTextField;
+    -ObservableList<Item> items
+
+
+    -public TableView InventoryManagerTableView;
+    -public TableColumn ValueTableColumn;
+    -public TableColumn SerialNumberTableColumn;
+    -public TableColumn NameTableColumn;
+    -public TextField AddItemNewValueTextField;
+    -public TextField AddItemNewSerialNumberTextField;
+    -public TextField AddItemNewNameTextField;
+    -public TextField SearchTextField;
+    -public TextField SaveInventoryAsPathNameTextField;
+    -public TextField SaveInventoryAsFileNameTextField;
+    -public TextField LoadAListPathNameTextField;
+    -public TextField LoadAListFileNameTextField;
+    -public Button RemoveItemButton;
+    -public Button SortButton;
+    -public Button SearchButton;
+    -public ComboBox SortByComboBox;
+    -public ComboBox SearchByComboBox;
+    -public ComboBox SaveInventoryAsComboBox;
+
+    +initialize()
+    +AddItemButtonClicked()
+    +SortButtonClicked()
+    +RemoveItemButtonClicked()
+    +ValueTableColumnEditted()
+    +SerialNumberTableColumnEditted()
+    +NameTableColumnEditted()
+    +SearchButtonClicked()
+    +SaveInventoryButtonClicked()
+    +LoadAListButtonClicked()
+    +ShowAllInventoryItemsClicked()
+    +addAnItem()
+    +sortListByValue()
+    +sortListByName()
+    +sortListBySerialNumber()
+    +checkNameLength()
+    +checkSerialNumberLength()
+    +checkValue()
+    +doesSerialNumberAlreadyExist()
+    +deleteAnItem()
+    +putDataToHTMLString()
+    +putDataToTSVString()
+    +putDataToJsonString()
+    +searchByName()
+    +searchBySerialNumber()
+    +putDataToHTMLFile()
+    +putDataToTSVFile()
+    +putDataToJsonFile()
+    +loadAnHTMLList()
+    +makeFileReader()
+    +loadAnTxtList()
+    +getLastString()
+    +loadAJSONList()
+
+
 }
 
 
