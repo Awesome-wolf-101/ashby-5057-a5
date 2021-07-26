@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryManagerControllerTest {
 
+    //test if you can add an item(requirement #3)
     @Test
     void addAnItem() {
         //make a new controller
@@ -29,6 +30,7 @@ class InventoryManagerControllerTest {
         assertEquals("Candy", data.get(0).getName());
     }
 
+    //test if you can sort a list by value(requirement #8)
     @Test
     void sortListByValue() {
         //make a new controller
@@ -45,6 +47,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, data.get(0).getValue().equals("$3.00"));
     }
 
+    //test if you can sort a list by value(requirement #10)
     @Test
     void sortListByName() {
         //make a new controller
@@ -61,6 +64,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, data.get(0).getName().equals("Apple"));
     }
 
+    //test if you can sort a list by value(requirement #9)
     @Test
     void sortListBySerialNumber() {
         //make a new controller
@@ -77,6 +81,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, data.get(1).getSerialNumber().equals("1234567890"));
     }
 
+    //test if a name has a valid length(part of requirement #2)
     @Test
     void checkNameLength() {
         //make a new controller
@@ -84,6 +89,7 @@ class InventoryManagerControllerTest {
         assertEquals(false,controller.checkNameLength("1")) ;
     }
 
+    //test if a serial number has a valid length(part of requirement #2)
     @Test
     void checkSerialNumberLength() {
         //make a new controller
@@ -91,6 +97,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, controller.checkSerialNumberLength("0123456789")) ;
     }
 
+    //test if a value is in a valid format(part of requirement #2)
     @Test
     void checkValue() {
         //make a new controller
@@ -99,6 +106,7 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if a serial number already exists in a given list(part of requirement #2)
     @Test
     void doesSerialNumberAlreadyExist() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -112,6 +120,7 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if you can remove an item(requirement #4)
     @Test
     void deleteAnItem() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -125,6 +134,7 @@ class InventoryManagerControllerTest {
         assertEquals(true,data.size() == 2) ;
     }
 
+    //test if you can put data to an HTML String(part of requirement #13)
     @Test
     void putDataToHTMLString() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -159,6 +169,7 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if you can put data to an TSV String(part of requirement #13)
     @Test
     void putDataToTSVString() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -169,6 +180,7 @@ class InventoryManagerControllerTest {
         assertEquals("$4.00\t0123456789\tCandy\n",Actual) ;
     }
 
+    //test if you can search a list by Name(requirement #12)
     @Test
     void searchbyName() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -178,9 +190,10 @@ class InventoryManagerControllerTest {
         controller.addAnItem(data, "$3.00", "0123456780", "Apple");
         controller.addAnItem(data, "$67.00", "0123456781", "Orange");
         ObservableList<Item> data2 = controller.searchByName(data, "Orange");
-        assertEquals("orange", data2.get(0).getName()) ;
+        assertEquals("Orange", data2.get(0).getName()) ;
     }
 
+    //test if you can search a list by serial Number(requirement #11)
     @Test
     void searchbySerialNumber() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -193,6 +206,7 @@ class InventoryManagerControllerTest {
         assertEquals("0123456781", data2.get(0).getSerialNumber());
     }
 
+    //test if you can put data to an HTML File(part of requirement #13)
     @Test
     void putDataToHTMLFile() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -214,6 +228,7 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if you can put data to an TSV File(part of requirement #13)
     @Test
     void putDataToTSVFile() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -234,6 +249,7 @@ class InventoryManagerControllerTest {
         assertEquals(true, actual);
     }
 
+    //test if you can load an HTML File as a list(part of requirement #14)
     @Test
     void loadAnHTMLList() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -256,7 +272,7 @@ class InventoryManagerControllerTest {
             data = controller.loadAnHTMLList(file1R);
             //check to see if the item at the second index of data has a description
             //equal to it's original description
-            assertEquals("Candy", data.get(0).getName());
+            assertEquals("Candy ", data.get(0).getName());
         }
         catch (IOException e) {
             //print the exception
@@ -265,6 +281,7 @@ class InventoryManagerControllerTest {
 
     }
 
+    //test if you can make a file reader given a pathname and the name of a file to load(part of requirement #14)
     @Test
     void makeFileReader() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -275,11 +292,12 @@ class InventoryManagerControllerTest {
         controller.addAnItem(data, "$67.00", "0123456781", "Orange");
         String StringToOutPut = controller.putDataToHTMLString(data, "ListName");
         //call the put data to file function
-        controller.putDataToTSVFile("New file", StringToOutPut, "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
-        FileReader file1R = controller.makeFileReader("ListName.txt",  "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
+        controller.putDataToHTMLFile("ListName", StringToOutPut, "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
+        FileReader file1R = controller.makeFileReader("ListName.html",  "C:\\Users\\joshu\\IdeaProjects\\untitled\\ashby-5057-a5\\\\");
         assertEquals(true, file1R != null);
     }
 
+    //test if you can load an TSV/Tst File as a list(part of requirement #14)
     @Test
     void loadAnTxtList() {
         InventoryManagerController controller = new InventoryManagerController();
@@ -302,12 +320,28 @@ class InventoryManagerControllerTest {
             data = controller.loadAnHTMLList(file1R);
             //check to see if the item at the second index of data has a description
             //equal to it's original description
-            assertEquals("Candy", data.get(0).getName());
+            assertEquals("Candy ", data.get(0).getName());
         }
         catch (IOException e) {
             //print the exception
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    void putDataToJsonString() {
+    }
+
+    @Test
+    void putDataToJsonFile() {
+    }
+
+    @Test
+    void getLastString() {
+    }
+
+    @Test
+    void loadAJSONList() {
     }
 }
